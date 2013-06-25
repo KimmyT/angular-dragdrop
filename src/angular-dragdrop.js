@@ -31,7 +31,7 @@ var jqyoui = angular.module('ngDragDrop', []).directive('jqyouiDraggable', funct
     require: '?jqyouiDroppable',
     restrict: 'A',
     link: function(scope, element, attrs) {
-      var dragSettings;
+      var dragSettings, zIndex, left, top;
       var updateDraggable = function(newValue, oldValue) {
         if (newValue) {
           dragSettings = scope.$eval(element.attr('jqyoui-draggable')) || [];
@@ -40,6 +40,9 @@ var jqyoui = angular.module('ngDragDrop', []).directive('jqyouiDraggable', funct
             .draggable(scope.$eval(attrs.jqyouiOptions) || {})
             .draggable({
               start: function(event, ui) {
+                zIndex = $(element).css('z-index');
+                left = $(element).css('left');
+                top = $(element).css('top');
                 $(this).css('z-index', 99999);
                 jqyoui.startXY = $(this).offset();
 
@@ -51,6 +54,10 @@ var jqyoui = angular.module('ngDragDrop', []).directive('jqyouiDraggable', funct
                 if (dragSettings.onStop) {
                   scope[dragSettings.onStop](event, ui);
                 }
+                //console.log('restoringx ' + left + ' ' + top);
+                $(element).css('z-index', zIndex);
+                $(element).css('left', left);
+                $(element).css('top', top);
               },
               drag: function(event, ui) {
                 if (dragSettings.onDrag) {
@@ -234,6 +241,6 @@ jqyoui.mutateDraggable = function(scope, dropSettings, dragSettings, dragModel, 
       if (scope.$parent) scope.$parent[dragModel] = dropItem;
     }
   }
-
-  $draggable.css({'z-index': '', 'left': '', 'top': ''});
+  //console.log('not clearing left and top');
+  //$draggable.css({'z-index': '', 'left': '', 'top': ''});
 };
