@@ -187,8 +187,12 @@ var jqyoui = angular.module('ngDragDrop', []).service('ngDragDropService', ['$ti
           }
         }
       }
+      var dragOptions = scope.$eval($draggable.attr('data-jqyoui-options')) || {};
+      console.log('dragOptions.helper: ' + dragOptions.helper);
+      if (dragOptions.helper !== 'clone') {
+        $draggable.css({'z-index': '', 'left': '', 'top': ''});
+      }
 
-      $draggable.css({'z-index': '', 'left': '', 'top': ''});
     };
   }]).directive('jqyouiDraggable', ['ngDragDropService', function(ngDragDropService) {
     return {
